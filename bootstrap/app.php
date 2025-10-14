@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -18,12 +19,24 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-        $exceptions->renderable(function (NotFoundHttpException $e, $request) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Not found.'
-                ], Response::HTTP_NOT_FOUND);
-            }
+        $exceptions->render(function (NotFoundHttpException $e, $request) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Route not found.'
+            ], Response::HTTP_NOT_FOUND);
+        });
+
+        $exceptions->render(function (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Resource not found'
+            ], 404);
+        });
+
+        $exceptions->render(function (Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Server error'
+            ], 500);
         });
     })->create();
