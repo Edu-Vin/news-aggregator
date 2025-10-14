@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Article;
 
 use App\Contracts\Article\ArticleInterface;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ArticleSearchRequest;
 use App\Http\Resources\ArticleResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,8 +19,8 @@ class ArticleController extends Controller
         $this->articleInterface = $articleInterface;
     }
 
-    public function index(Request $request): ResourceCollection {
-        $articles = $this->articleInterface->getArticles($request->query());
+    public function index(ArticleSearchRequest $request): ResourceCollection {
+        $articles = $this->articleInterface->getArticles($request->validated());
         return ArticleResource::collection($articles);
     }
 

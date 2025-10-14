@@ -21,7 +21,7 @@ class ArticleRepository extends BaseRepository implements ArticleInterface {
     public function getArticles(array $requestQuery) {
         $articleQuery = $this->model->query();
 
-        // Full-text search (title + description + conte
+        // Full-text search (title + description)
         if (isset( $requestQuery['search']) && $search = $requestQuery['search']) {
             $articleQuery->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%$search%")
