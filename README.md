@@ -1,66 +1,264 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# News Aggregator
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### Requirements
+1. Data aggregation and storage: Implement a backend system that fetches articles from selected data sources
+   (choose at least 3 from the provided list) and stores them locally in a database. Ensure that the data is regularly
+   updated from the live data sources.
 
-## About Laravel
+2. API endpoints: Create API endpoints for the frontend application to interact with the backend. These endpoints
+   should allow the frontend to retrieve articles based on search queries, filtering criteria (date, category, source), and
+   user preferences (selected sources, categories, authors).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📝 Table of Contents
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. [Local Setup Instructions](#local-setup-instructions)  
+2. [Implementation Architecture & Folder Structure](#architecture--folder-structure)  
+3. [How It Works](#how-it-works)  
+4. [API Documentation](#api-documentation)  
+5. [Testing](#testing)
+6. [License](#license)  
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Local Setup Instructions
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Prerequisites
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- PHP 8.2+  
+- Composer  
+- A database (MySQL, PostgreSQL, or SQLite for local/dev)  
+- API keys for NewsAPI, Guardian, NYTimes  
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Installation Steps
 
-## Laravel Sponsors
+1. **Clone the repository**
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+   ```bash
+   git clone https://github.com/Edu-Vin/news-aggregator.git
+   cd news-aggregator
 
-### Premium Partners
+2. **Install PHP dependencies**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+   ```bash
+   composer install
+   ```
 
-## Contributing
+3. **Environment setup**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-## Code of Conduct
+   Fill in `.env` values, including database credentials and API keys:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+   ```env
+    NEWSAPI_KEY=...
+    GUARDIAN_KEY=...
+    NYTIMES_KEY=...
+    
+    NEWSAPI_BASE_URL=...
+    GUARDIAN_BASE_URL=...
+    NYTIMES_BASE_URL=...
+   ```
 
-## Security Vulnerabilities
+4. **Database setup**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+   If using SQLite:
+
+   ```bash
+   touch database/database.sqlite
+   ```
+
+   Then run:
+
+   ```bash
+   php artisan migrate --seed
+   ```
+
+5. **Start the application**
+
+   ```bash
+   php artisan serve
+   ```
+
+   The backend will by default be accessible at `http://localhost:8000`.
+
+---
+
+## Implementation Architecture & Folder Structure
+
+```
+├── app/
+│   ├── Contracts/
+│   │   ├── Article/
+│   │   │   └── ArticleInterface.php
+│   │   ├── Category/
+│   │   │   └── CategoryInterface.php
+│   │   └── Source/
+│   │       └── SourceInterface.php
+│
+│   ├── Entities/
+│   │   ├── Article/
+│   │   │   └── ArticleEntity.php
+│   │   ├── Category/
+│   │   │   └── CategoryEntity.php
+│   │   └── Source/
+│   │       └── SourceEntity.php
+│
+│   ├── Repositories/
+│   │   ├── Article/
+│   │   │   └── ArticleRepository.php
+│   │   ├── Category/
+│   │   │   └── CategoryRepository.php
+│   │   └── Source/
+│   │       └── SourceRepository.php
+│
+│   ├── Services/
+│   │   └── News/
+│   │       ├── NewsApiService.php
+│   │       ├── GuardianService.php
+│   │       └── NYTimesService.php
+│   │       └── BaseService.php
+
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Article/
+│   │   │   │   └── ArticleController.php
+│   │   │   ├── Category/
+│   │   │   │   └── CategoryController.php
+│   │   │   └── Source/
+│   │   │       └── SourceController.php
+│   │   └── Resources/
+│
+│   ├── Jobs/
+│   │   └── FetchNewsSourceJob.php
+│
+│   └── Console/
+│       └── Commands/
+│           └── FetchNewsCommand.php
+│
+├── database/
+│   ├── factories/
+│   │   ├── ArticleFactory.php
+│   │   ├── CategoryFactory.php
+│   │   └── SourceFactory.php
+│   ├── migrations/
+│   └── seeders/
+│
+├── routes/
+│   ├── api.php
+│   ├── web.php
+│   └── console.php
+│
+├── tests/
+│   ├── Feature/
+│   │   ├── ArticleTest.php
+│   │   ├── FetchNewsCommandTest.php
+
+```
+
+---
+
+## How It Works
+
+1. A console command or scheduled job triggers a fetch operation for all integrated sources.
+2. Each service fetches and normalizes external articles.
+3. Articles are categorized using keywords and saved through a repository layer.
+4. API endpoints serve this data to the frontend using filters like date, author, category, etc.
+
+---
+
+## API Documentation
+
+### Base URL
+
+```
+http://localhost:8000/api
+```
+
+---
+
+### `GET /api/articles`
+
+**Query Parameters:**
+
+| Parameter  | Type   | Description                               |
+|------------|--------|-------------------------------------------|
+| `search`   | string | Search term for title/description/content |
+| `category` | int    | Filter by category ID                     |
+| `source`   | int    | Filter by source ID                       |
+| `author`   | string | Filter by author                          |
+| `from`     | string | Filter from date (YYYY-MM-DD)             |
+| `to`       | string | Filter to date (YYYY-MM-DD)               |
+| `per_page` | int    | Number of contents to retrieve per page   |
+
+
+**Example Response:**
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Sample Title",
+      "description": "Brief summary...",
+      "author": "John Doe",
+      "published_at": "2025-10-14",
+      "url": "https://...",
+      "source": {
+        "id": 2,
+        "name": "BBC"
+      },
+      "category": {
+        "id": 1,
+        "name": "Technology"
+      }
+    }
+  ],
+  "meta": {
+    "current_page": 1,
+    "last_page": 2,
+    "per_page": 10,
+    "total": 15
+  }
+}
+```
+
+---
+
+### `GET /api/categories`
+
+```json
+[
+  { "id": 1, "name": "Technology" },
+  { "id": 2, "name": "Health" }
+]
+```
+
+---
+
+### `GET /api/sources`
+
+```json
+[
+  { "id": 1, "name": "BBC" },
+  { "id": 2, "name": "The Guardian" }
+]
+```
+
+---
+
+## Testing
+
+Run all tests:
+
+```bash
+php artisan test
+```
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT License © Edu-Vin
