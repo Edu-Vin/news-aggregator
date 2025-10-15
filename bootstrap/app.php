@@ -34,6 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $exceptions->render(function (Throwable $e) {
+            logger()->error($e);
             return response()->json([
                 'status' => 'error',
                 'message' => 'Server error'

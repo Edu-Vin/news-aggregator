@@ -17,6 +17,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(\App\Contracts\Article\ArticleInterface::class, \App\Repositories\Article\ArticleRepository::class);
         $this->app->bind(\App\Contracts\Category\CategoryInterface::class, \App\Repositories\Category\CategoryRepository::class);
         $this->app->bind(\App\Contracts\Source\SourceInterface::class, \App\Repositories\Source\SourceRepository::class);
+        $this->app->bind(\App\Contracts\User\UserPreferenceInterface::class, \App\Repositories\User\UserPreferenceRepository::class);
     }
 
     /**

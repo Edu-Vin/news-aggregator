@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Models;
+namespace App\Entities\User;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class UserEntity extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
+    protected $table = 'users';
     /**
      * The attributes that are mass assignable.
      *
@@ -44,5 +46,31 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function preference(): HasOne {
+        return $this->hasOne(UserPreferenceEntity::class, 'user_id', 'id');
+    }
+
+    /**
+     * Get or create user preferences
+     */
+    public function getOrCreatePreference(): UserPreferenceEntity
+    {
+        return $this->preference()->firstOrCreate([
+            'user_id' => $this->id,
+        ]);
+    }
+
+    /**
+     * Check if user has any preferences set
+     */
+    public function hasPreferences(): bool
+    {
+        if (!$this->preference) {
+            return false;
+        }
+
+        return $this->preference->hasAnyPreferences();
     }
 }
