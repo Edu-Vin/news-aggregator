@@ -10,28 +10,31 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('verify-api-key')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('articles', [ArticleController::class, 'index']);
-Route::get('articles/authors', [ArticleController::class, 'getAuthors']);
+    Route::get('articles', [ArticleController::class, 'index']);
+    Route::get('articles/authors', [ArticleController::class, 'getAuthors']);
 
-Route::get('categories', [CategoryController::class, 'index']);
-Route::get('sources', [SourceController::class, 'index']);
+    Route::get('categories', [CategoryController::class, 'index']);
+    Route::get('sources', [SourceController::class, 'index']);
 
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/me', [AuthController::class, 'me']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::get('/me', [AuthController::class, 'me']);
 
-    Route::prefix('preferences')->group(function () {
-        Route::controller(UserPreferenceController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::put('/', 'update');
-            Route::post('/add', 'addItem');
-            Route::delete('/remove', 'removeItem');
+        Route::prefix('preferences')->group(function () {
+            Route::controller(UserPreferenceController::class)->group(function () {
+                Route::get('/', 'index');
+                Route::put('/', 'update');
+                Route::post('/add', 'addItem');
+                Route::delete('/remove', 'removeItem');
+            });
         });
-    });
 
-    Route::get('/feed', [UserPreferenceController::class, 'feed']);
+        Route::get('/feed', [UserPreferenceController::class, 'feed']);
+    });
 });
+
