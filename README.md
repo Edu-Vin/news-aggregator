@@ -1,5 +1,5 @@
 # News Aggregator
-
+This was implemented using repository pattern.
 ### Requirements
 1. Data aggregation and storage: Implement a backend system that fetches articles from selected data sources
    (choose at least 3 from the provided list) and stores them locally in a database. Ensure that the data is regularly
@@ -11,12 +11,11 @@
 
 ## 📝 Table of Contents
 
-1. [Local Setup Instructions](#local-setup-instructions)  
-2. [Implementation Architecture & Folder Structure](#implementation-architecture--folder-structure)  
-3. [How It Works](#how-it-works)  
-4. [API Documentation](#api-documentation)  
-5. [Testing](#testing)
-6. [License](#license)  
+1. [Local Setup Instructions](#local-setup-instructions)   
+2. [How It Works](#how-it-works)  
+3. [API Documentation](#api-documentation)  
+4. [Testing](#testing)
+5. [License](#license)  
 
 ---
 
@@ -53,6 +52,7 @@
    Fill in `.env` values, including database credentials and API keys:
 
    ```env
+    API_KEY=
     NEWSAPI_KEY=...
     GUARDIAN_KEY=...
     NYTIMES_KEY=...
@@ -86,86 +86,12 @@
 
 ---
 
-## Implementation Architecture & Folder Structure
-
-```
-├── app/
-│   ├── Contracts/
-│   │   ├── Article/
-│   │   │   └── ArticleInterface.php
-│   │   ├── Category/
-│   │   │   └── CategoryInterface.php
-│   │   └── Source/
-│   │       └── SourceInterface.php
-│
-│   ├── Entities/
-│   │   ├── Article/
-│   │   │   └── ArticleEntity.php
-│   │   ├── Category/
-│   │   │   └── CategoryEntity.php
-│   │   └── Source/
-│   │       └── SourceEntity.php
-│
-│   ├── Repositories/
-│   │   ├── Article/
-│   │   │   └── ArticleRepository.php
-│   │   ├── Category/
-│   │   │   └── CategoryRepository.php
-│   │   └── Source/
-│   │       └── SourceRepository.php
-│
-│   ├── Services/
-│   │   └── News/
-│   │       ├── NewsApiService.php
-│   │       ├── GuardianService.php
-│   │       └── NYTimesService.php
-│   │       └── BaseService.php
-
-│   ├── Http/
-│   │   ├── Controllers/
-│   │   │   ├── Article/
-│   │   │   │   └── ArticleController.php
-│   │   │   ├── Category/
-│   │   │   │   └── CategoryController.php
-│   │   │   └── Source/
-│   │   │       └── SourceController.php
-│   │   └── Resources/
-│
-│   ├── Jobs/
-│   │   └── FetchNewsSourceJob.php
-│
-│   └── Console/
-│       └── Commands/
-│           └── FetchNewsCommand.php
-│
-├── database/
-│   ├── factories/
-│   │   ├── ArticleFactory.php
-│   │   ├── CategoryFactory.php
-│   │   └── SourceFactory.php
-│   ├── migrations/
-│   └── seeders/
-│
-├── routes/
-│   ├── api.php
-│   ├── web.php
-│   └── console.php
-│
-├── tests/
-│   ├── Feature/
-│   │   ├── ArticleTest.php
-│   │   ├── FetchNewsCommandTest.php
-
-```
-
----
-
 ## How It Works
 
 1. A console command or scheduled job triggers a fetch operation for all integrated sources.
 2. Each service fetches and normalizes external articles.
 3. Articles are categorized using keywords and saved through a repository layer.
-4. API endpoints serve this data to the frontend using filters like date, author, category, etc.
+4. API endpoints serve this data to the frontend using filters like date, author, category, etc and also user preferences.
 
 ---
 
