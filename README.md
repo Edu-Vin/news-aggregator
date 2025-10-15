@@ -12,7 +12,7 @@
 ## 📝 Table of Contents
 
 1. [Local Setup Instructions](#local-setup-instructions)  
-2. [Implementation Architecture & Folder Structure](#architecture--folder-structure)  
+2. [Implementation Architecture & Folder Structure](#implementation-architecture--folder-structure)  
 3. [How It Works](#how-it-works)  
 4. [API Documentation](#api-documentation)  
 5. [Testing](#testing)
@@ -170,13 +170,15 @@
 ---
 
 ## API Documentation
+The postman_collection.json which is the postman collection export is included in the codebase
 
 ### Base URL
 
 ```
 http://localhost:8000/api
 ```
-
+### Postman Documentation
+https://documenter.getpostman.com/view/9119505/2sB3QNoThR
 ---
 
 ### `GET /api/articles`
@@ -193,59 +195,6 @@ http://localhost:8000/api
 | `to`       | string | Filter to date (YYYY-MM-DD)               |
 | `per_page` | int    | Number of contents to retrieve per page   |
 
-
-**Example Response:**
-
-```json
-{
-  "data": [
-    {
-      "id": 1,
-      "title": "Sample Title",
-      "description": "Brief summary...",
-      "author": "John Doe",
-      "published_at": "2025-10-14",
-      "url": "https://...",
-      "source": {
-        "id": 2,
-        "name": "BBC"
-      },
-      "category": {
-        "id": 1,
-        "name": "Technology"
-      }
-    }
-  ],
-  "meta": {
-    "current_page": 1,
-    "last_page": 2,
-    "per_page": 10,
-    "total": 15
-  }
-}
-```
-
----
-
-### `GET /api/categories`
-
-```json
-[
-  { "id": 1, "name": "Technology" },
-  { "id": 2, "name": "Health" }
-]
-```
-
----
-
-### `GET /api/sources`
-
-```json
-[
-  { "id": 1, "name": "BBC" },
-  { "id": 2, "name": "The Guardian" }
-]
-```
 
 ---
 
