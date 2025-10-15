@@ -60,7 +60,7 @@ class NYTimesService extends BaseService {
 
                 // Initialize totalHits
                 if ($totalHits === null && isset($metadata['hits'])) {
-                    $totalHits = min($metadata['hits'], 1000); // NYT max cap
+                    $totalHits = min($metadata['hits'], 1000);
                     $maxPages = ceil($totalHits / $articlesPerPage);
                 }
 
@@ -75,7 +75,8 @@ class NYTimesService extends BaseService {
                         continue; // skip invalid
                     }
 
-                    $category = $categories->get($section); // match by section name
+                    // match by section name
+                    $category = $categories->get($section);
                     $this->articleInterface->updateOrCreate($url, [
                         'title' => $title,
                         'description' => $description,

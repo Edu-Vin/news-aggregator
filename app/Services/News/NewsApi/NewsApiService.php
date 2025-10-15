@@ -61,7 +61,6 @@ class NewsApiService extends BaseService{
 
                 if (is_null($totalPages)) {
                     $totalResults = $data['totalResults'] ?? 0;
-                    // Cap at 100 pages even if totalResults > 10,000
                     $totalPages = min(ceil($totalResults / $pageSize), $maxPages);
                 }
 

@@ -19,13 +19,29 @@ class ArticleController extends Controller
         $this->articleInterface = $articleInterface;
     }
 
-    public function index(ArticleSearchRequest $request): ResourceCollection {
+    /**
+     * Get all articles
+     */
+    public function index(ArticleSearchRequest $request): JsonResponse {
         $articles = $this->articleInterface->getArticles($request->validated());
-        return ArticleResource::collection($articles);
+        return response()->json([
+            'status' => 'success',
+            'data' => ArticleResource::collection($articles),
+            'meta' => [
+                'current_page' => $articles->currentPage(),
+                'last_page' => $articles->lastPage(),
+                'per_page' => $articles->perPage(),
+                'total' => $articles->total(),
+            ],
+        ]);
     }
 
+    /**
+     * Get all authors
+     */
     public function getAuthors(): JsonResponse {
         return response()->json([
+            'status' => 'success',
             'data' => $this->articleInterface->getAuthors()
         ]);
     }
