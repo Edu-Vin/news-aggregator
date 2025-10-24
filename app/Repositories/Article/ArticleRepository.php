@@ -6,6 +6,8 @@ use App\Contracts\Article\ArticleInterface;
 use App\Entities\Article\ArticleEntity;
 use App\Repositories\BaseRepository;
 use Illuminate\Container\Container as App;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class ArticleRepository extends BaseRepository implements ArticleInterface {
 
@@ -18,7 +20,7 @@ class ArticleRepository extends BaseRepository implements ArticleInterface {
         parent::__construct($app);
     }
 
-    public function getArticles(array $requestQuery) {
+    public function getArticles(array $requestQuery): LengthAwarePaginator {
         $articleQuery = $this->model->query();
 
         // Full-text search (title + description)
@@ -60,7 +62,7 @@ class ArticleRepository extends BaseRepository implements ArticleInterface {
         return $articleQuery->orderBy('published_at', 'desc')->paginate($perPage);
     }
 
-    public function getAuthors() {
+    public function getAuthors(): Collection {
         return $this->model->select('author')
             ->whereNotNull('author')
             ->distinct()

@@ -6,6 +6,7 @@ use App\Contracts\Category\CategoryInterface;
 use App\Entities\Category\CategoryEntity;
 use App\Repositories\BaseRepository;
 use Illuminate\Container\Container as App;
+use Illuminate\Database\Eloquent\Collection;
 
 class CategoryRepository extends BaseRepository implements CategoryInterface {
 
@@ -18,7 +19,7 @@ class CategoryRepository extends BaseRepository implements CategoryInterface {
         parent::__construct($app);
     }
 
-    public function getCategories() {
+    public function getCategories(): Collection {
         return $this->model->select('id', 'name')->orderBy('name')->get();
     }
 

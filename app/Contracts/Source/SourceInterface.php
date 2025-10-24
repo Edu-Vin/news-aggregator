@@ -7,5 +7,5 @@ use App\Entities\Source\SourceEntity;
 interface SourceInterface {
 
     public function getSources();
-    public function getSourceByName(string $name): ?SourceEntity;
+    public function getSourceByName(string $name): SourceEntity;
 }

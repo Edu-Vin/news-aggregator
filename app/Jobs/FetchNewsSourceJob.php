@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Factories\NewsSourceFactory;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Throwable;
@@ -26,7 +27,7 @@ class FetchNewsSourceJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $source = app($this->sourceClass);
+        $source = NewsSourceFactory::make($this->sourceClass);
 
         logger()->info("Fetching news from: {$this->sourceClass}");
         $source->getArticles();

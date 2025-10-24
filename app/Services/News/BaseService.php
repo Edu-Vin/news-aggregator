@@ -30,7 +30,7 @@ abstract class BaseService {
         $this->source = $this->sourceInterface->getSourceByName($this->serviceName);
     }
 
-    protected function getSourceInfo(): ?SourceEntity {
+    protected function getSourceInfo(): SourceEntity {
         return $this->source;
     }
 

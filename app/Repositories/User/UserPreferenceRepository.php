@@ -23,7 +23,7 @@ class UserPreferenceRepository extends BaseRepository implements UserPreferenceI
         parent::__construct($app);
     }
 
-    public function getUserPreferences(UserEntity $user): ?array
+    public function getUserPreferences(UserEntity $user): array
     {
         $preference = $user->preference;
 
