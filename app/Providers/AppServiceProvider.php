@@ -2,6 +2,14 @@
 
 namespace App\Providers;
 
+use App\Contracts\Article\ArticleInterface;
+use App\Contracts\Category\CategoryInterface;
+use App\Contracts\Source\SourceInterface;
+use App\Contracts\User\UserPreferenceInterface;
+use App\Repositories\Article\ArticleRepository;
+use App\Repositories\Category\CategoryRepository;
+use App\Repositories\Source\SourceRepository;
+use App\Repositories\User\UserPreferenceRepository;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -14,10 +22,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(\App\Contracts\Article\ArticleInterface::class, \App\Repositories\Article\ArticleRepository::class);
-        $this->app->bind(\App\Contracts\Category\CategoryInterface::class, \App\Repositories\Category\CategoryRepository::class);
-        $this->app->bind(\App\Contracts\Source\SourceInterface::class, \App\Repositories\Source\SourceRepository::class);
-        $this->app->bind(\App\Contracts\User\UserPreferenceInterface::class, \App\Repositories\User\UserPreferenceRepository::class);
+        $this->app->bind(ArticleInterface::class, ArticleRepository::class);
+        $this->app->bind(CategoryInterface::class, CategoryRepository::class);
+        $this->app->bind(SourceInterface::class, SourceRepository::class);
+        $this->app->bind(UserPreferenceInterface::class, UserPreferenceRepository::class);
     }
 
     /**
